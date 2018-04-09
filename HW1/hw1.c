@@ -64,8 +64,8 @@ int main() {
 	// use _CP0_SET_COUNT(0) and _CP0_GET_COUNT() to test the PIC timing
 	// remember the core timer runs at half the sysclk
         _CP0_SET_COUNT(0);
-        //sysclk->48MHz; core timer->24MHz; 1kHz->24000
-        while(_CP0_GET_COUNT()<){;}//count and wait
+        //sysclk->48MHz; core timer->24MHz; 0.5ms->2kHz->12000
+        while(_CP0_GET_COUNT()<12000){;}//count and wait
         LATAINV=0b10000;//toggle A4
         _CP0_SET_COUNT(0);//reset the core timer
         while(!PORTBbits.RB4){;} // if button is pushed, stop and wait
