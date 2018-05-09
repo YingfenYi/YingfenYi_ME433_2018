@@ -15,13 +15,15 @@ void SPI1_init() {
     SDI1Rbits.SDI1R = 0b0100; // Set SDI1 to B8, actually not connected to DAC
     SPI1CON = 0;              // turn off the SPI module and reset it
     SPI1BUF;                  // clear the rx buffer by reading from it
-    SPI1BRG = 0x1;            // SPI1BRG = (80MHz/(2*20MHz))-1 = 1
+    SPI1BRG = 0x1;            // SPI1BRG = (48MHz/(2*x MHz))-1 = 1; now x = 12MHz
     SPI1STATbits.SPIROV = 0;  // clear the overflow bit
     SPI1CONbits.CKE = 1;      // data changes when clock goes from HIGH to LOW (since CKP is 0)
     SPI1CONbits.MSTEN = 1;    // master operation
     SPI1CONbits.ON = 1;       // turn on SPI1
     TRISAbits.TRISA0 = 0;
 }
+
+
 //where channel is 0 or 1 (for VoutA and VoutB), and voltage is the 8-bit output level.
 void setVoltage(char channel, unsigned short voltage){
     unsigned char LSB,MSB;

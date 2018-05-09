@@ -46,8 +46,6 @@ int main() {
     //__builtin_enable_interrupts();
     
     while(1) {
-      // setVoltage(CHANNELA,0b1111111111);       //test
-      // setVoltage(CHANNELB,0);      //test
         // remember the core timer runs at half the sysclk
         for(i=0;i<200;i++){
             _CP0_SET_COUNT(0);  // Reset the timer
