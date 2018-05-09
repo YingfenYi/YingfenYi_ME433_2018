@@ -38,23 +38,23 @@
 #pragma config FUSBIDIO = 1 // USB pins controlled by USB module
 #pragma config FVBUSONIO = 1 // USB BUSON controlled by USB module
 
+
 int main() {
     int i;
-     
     //__builtin_disable_interrupts();
     SPI1_init();
-   // __builtin_enable_interrupts();
+    //__builtin_enable_interrupts();
     
     while(1) {
-        // use _CP0_SET_COUNT(0) and _CP0_GET_COUNT() to test the PIC timing
-            // remember the core timer runs at half the sysclk
+      // setVoltage(CHANNELA,0b1111111111);       //test
+      // setVoltage(CHANNELB,0);      //test
+        // remember the core timer runs at half the sysclk
         for(i=0;i<200;i++){
-            setVoltage(CHANNELA,127.5+127.5*sin((float)i*0.02*PI));
-            setVoltage(CHANNELB,255*(float)i*0.005);
             _CP0_SET_COUNT(0);  // Reset the timer
-            while(_CP0_GET_COUNT() < 12000){;}  // 24MHz/1kHz = 24000
+            setVoltage(CHANNELA,(int)(1023/2.0*(1+sin(PI/50.0*i))));
+            setVoltage(CHANNELB,(int)(1023/200.0*i));
+            while(_CP0_GET_COUNT() < 24000){;}  // 24MHz/1kHz = 24000
         }
-//        LATAINV = 0x10;     // turn off/on LED
- //       while(!PORTBbits.RB4){;} // if button is pushed, stop and wait
     }
+    return 0;
 }

@@ -23,13 +23,13 @@ void SPI1_init() {
     TRISAbits.TRISA0 = 0;
 }
 //where channel is 0 or 1 (for VoutA and VoutB), and voltage is the 8-bit output level.
-void setVoltage(char channel, unsigned char voltage){
+void setVoltage(char channel, unsigned short voltage){
     unsigned char LSB,MSB;
-    
-    LSB = voltage << 4;               
+    voltage = voltage &0b1111111111;
+    LSB = (voltage << 2)&0x00FF;               
     MSB = channel << 7;
     MSB |= 0b01110000;
-    MSB |= voltage >> 4;  
+    MSB |= voltage >> 6;  
     CS = 0;                        // enable SPI1 by set chip select line low
     SPI1_IO(MSB);
     SPI1_IO(LSB);      

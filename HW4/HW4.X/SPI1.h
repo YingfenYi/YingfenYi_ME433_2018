@@ -11,6 +11,6 @@
 
 unsigned char SPI1_IO(unsigned char ch); // send a byte via spi and return the response
 void SPI1_init(); // initialize SPI1
-void setVoltage(char channel, unsigned char voltage); // set channel and voltage
+void setVoltage(char channel, unsigned short voltage); // set channel and voltage
     
 #endif
