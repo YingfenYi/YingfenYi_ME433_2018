@@ -27,11 +27,10 @@ void SPI1_init() {
 //where channel is 0 or 1 (for VoutA and VoutB), and voltage is the 8-bit output level.
 void setVoltage(char channel, unsigned short voltage){
     unsigned char LSB,MSB;
-    voltage = voltage &0b1111111111;
-    LSB = (voltage << 2)&0x00FF;               
-    MSB = channel << 7;
-    MSB |= 0b01110000;
-    MSB |= voltage >> 6;  
+    voltage = voltage & 0b1111111111; //avoid unwant bits
+    LSB = voltage << 2; 
+    //The first 4 bits as the last 4 bits of MSB              
+    MSB = (voltage >>6) | ((channel << 7) | 0b01110000);
     CS = 0;                        // enable SPI1 by set chip select line low
     SPI1_IO(MSB);
     SPI1_IO(LSB);      
