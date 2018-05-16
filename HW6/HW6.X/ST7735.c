@@ -247,3 +247,46 @@ void LCD_clearScreen(unsigned short color) {
 		LCD_data16(color);
 	}
 }
+
+
+
+
+void LCD_drawChar(unsigned short x, unsigned short y, unsigned char ch, unsigned short color){
+// x, y is the top-left of the character
+	int i,j;
+	if((x<_GRAMWIDTH-5)&&(y<_GRAMWIDTH-8)){//no out of boundary
+		for (i = 0; i < 5; i++){
+			for (j = 0; j < 8; j++){
+				if (((ASCII[ch-0x20][i]>>j) & 0x01))
+					LCD_drawPixel(x+i,y+j,color);
+                else
+                    LCD_drawPixel(x+i,y+j,BACKGROUND);
+			}
+		}
+	}
+}
+
+void LCD_drawString(unsigned short x, unsigned short y, unsigned char ch[], unsigned short color){
+	int i=0;
+	while(1){
+		if(ch[i]=='\0'){
+			break;
+		}
+		LCD_drawChar(x+6*i,y,ch[i],color);
+		i++;
+	}
+}
+
+void LCD_drawBar(unsigned short x, unsigned short y, unsigned char progress, unsigned short color){
+    int i,j;
+    for(i=0;i<progress;i++){
+        for(j=0;j<4;j++){
+            LCD_drawPixel(x+i,y+j,color);
+        }
+    }
+    for(i=progress;i<BarLength;i++){
+        for(j=0;j<4;j++){
+            LCD_drawPixel(x+i,y+j,BACKGROUND);
+        }
+    }
+}

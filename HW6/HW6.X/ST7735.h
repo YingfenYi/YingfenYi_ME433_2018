@@ -5,6 +5,12 @@
 #ifndef ST7735_H__
 #define ST7735_H__
 
+
+#define BarLength 100
+//#define FOREGROUND 0xFF0F//set foreground color
+#define BACKGROUND 0x0000//set background color
+
+
 // lookup table for all of the ascii characters
 static const char ASCII[96][5] = {
  {0x00, 0x00, 0x00, 0x00, 0x00} // 20  (space)
@@ -175,5 +181,10 @@ void LCD_init(void); // send the initializations to the LCD
 void LCD_drawPixel(unsigned short, unsigned short, unsigned short); // set the x,y pixel to a color
 void LCD_setAddr(unsigned short, unsigned short, unsigned short, unsigned short); // set the memory address you are writing to
 void LCD_clearScreen(unsigned short); // set the color of every pixel
+
+
+void LCD_drawChar(unsigned short x, unsigned short y, unsigned char ch, unsigned short color);
+void LCD_drawString(unsigned short x, unsigned short y, unsigned char ch[], unsigned short color);
+void LCD_drawBar(unsigned short x, unsigned short y, unsigned char progress, unsigned short color);
 
 #endif
