@@ -166,6 +166,7 @@ static const char ASCII[96][5] = {
 #define MAGENTA   0xF81F
 #define YELLOW    0xFFE0
 
+void SPI1_init(void);
 unsigned char spi_io(unsigned char); // send and rx a byte over spi
 void LCD_command(unsigned char); // send a command to the LCD
 void LCD_data(unsigned char); // send data to the LCD

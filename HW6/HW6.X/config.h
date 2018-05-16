@@ -1,11 +1,13 @@
-#ifndef CONFIG_H__
-#define CONFIG_H__
+
+#ifndef config_H__
+#define config_H__
+
 
 // DEVCFG0
 #pragma config DEBUG = 0b10 // no debugging
 #pragma config JTAGEN = 0 // no jtag
 #pragma config ICESEL = 0b11 // use PGED1 and PGEC1
-#pragma config PWP = OFF // no write protect
+#pragma config PWP = 0x1FF // no write protect
 #pragma config BWP = 1 // no boot write protect
 #pragma config CP = 1 // no code protect
 
@@ -17,7 +19,7 @@
 #pragma config OSCIOFNC = 1 // disable secondary osc
 #pragma config FPBDIV = 0b00 // divide sysclk freq by 1 for peripheral bus clock
 #pragma config FCKSM = 0b11 // do not enable clock switch
-#pragma config WDTPS = 0b10100 // use slowest wdt
+#pragma config WDTPS = 0 // use slowest wdt
 #pragma config WINDIS = 1 // wdt no window mode
 #pragma config FWDTEN = 0 // wdt disabled
 #pragma config FWDTWINSZ = 0b11 // wdt window at 25%
@@ -35,5 +37,6 @@
 #pragma config IOL1WAY = 0 // allow multiple reconfigurations
 #pragma config FUSBIDIO = 1 // USB pins controlled by USB module
 #pragma config FVBUSONIO = 1 // USB BUSON controlled by USB module
+
 
 #endif
