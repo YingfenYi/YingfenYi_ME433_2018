@@ -42,12 +42,21 @@ void initIMU(){
 	ANSELBbits.ANSB2 = 0;
 	ANSELBbits.ANSB3 = 0;
 	i2c_master_setup();
+
 	i2c_master_start(); // make the start bit
 	i2c_master_send(SLAVE_ADDR<<1|0); // 0 indicate writing
 	i2c_master_send(0x10); // write to CTRL1_XL
 	i2c_master_send(0x82); // 0b 1000 00 10: 1.66 kHz, with 2g sensitivity, and 100 Hz filter.
+	i2c_master_stop(); // make the stop bit
+
+    i2c_master_start();
+    i2c_master_send(IMU_ADDR<<1);   // R/W = 0 = write
 	i2c_master_send(0x11); // write to CTRL2_G
 	i2c_master_send(0x88); // 0b 1000 10 0 0: 1.66 kHz, with 1000 dps sensitivity.
+	i2c_master_stop(); // make the stop bit
+
+    i2c_master_start();
+    i2c_master_send(IMU_ADDR<<1);   // R/W = 0 = write
 	i2c_master_send(0x12); // write to CTRL3_C
 	i2c_master_send(0x04); // 0b 0000 0100: Enable IF_INC
 	i2c_master_stop(); // make the stop bit
@@ -61,9 +70,9 @@ void I2C_read_multiple(unsigned char address, unsigned char reg, unsigned char *
 	i2c_master_send(address<<1|1); // 1 indicate reading
     int i;
 	for(i=0;i<length;i++){
-	*data = i2c_master_recv();
-	i2c_master_ack(0);
-	data++;
+	data[i] = i2c_master_recv();
+	if(i!=length-1)
+		i2c_master_ack(0);
 	}
 	i2c_master_ack(1); // make the ack so the slave knows we got it
 	i2c_master_stop(); // make the stop bit
