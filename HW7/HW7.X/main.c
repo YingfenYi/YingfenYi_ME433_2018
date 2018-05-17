@@ -10,7 +10,7 @@
 #define OUT_TEMP_L 0x20 
 
 void initIMU();
-void I2C_read_multiple(unsigned char address, unsigned char register, unsigned char * data, int length);
+void I2C_read_multiple(unsigned char address, unsigned char reg, unsigned char * data, int length);
 
 
 int main() {
@@ -27,9 +27,11 @@ int main() {
     LCD_init();
 	__builtin_enable_interrupts();
     LCD_clearScreen(BACKGROUND);
+    
+    sprintf(data,"Default");
 	I2C_read_multiple(SLAVE_ADDR, OUT_TEMP_L, data, length);
 	while(1) {
-		sprintf(message,"Hello World %d! ",i);
+		sprintf(message,"Hello World! ");
 		LCD_drawString(28,32,message,BLUE);
 		LCD_drawString(28,48,data,RED);
 	}
@@ -51,14 +53,15 @@ void initIMU(){
 	i2c_master_stop(); // make the stop bit
 }
 
-void I2C_read_multiple(unsigned char address, unsigned char register, unsigned char * data, int length){
+void I2C_read_multiple(unsigned char address, unsigned char reg, unsigned char * data, int length){
 	i2c_master_start(); // make the start bit
 	i2c_master_send(address<<1|0); // 0 indicate writing
-	i2c_master_send(register); // send the register address of OUT_TEMP_L 
+	i2c_master_send(reg); // send the register address of OUT_TEMP_L 
 	i2c_master_restart(); // make the restart bit
 	i2c_master_send(address<<1|1); // 1 indicate reading
+    int i;
 	for(i=0;i<length;i++){
-	&data = i2c_master_recv();
+	*data = i2c_master_recv();
 	i2c_master_ack(0);
 	data++;
 	}

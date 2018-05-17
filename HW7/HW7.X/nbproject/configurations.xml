@@ -6,6 +6,7 @@
                    projectFiles="true">
       <itemPath>ST7735.h</itemPath>
       <itemPath>i2c_master_noint.h</itemPath>
+      <itemPath>config.h</itemPath>
     </logicalFolder>
     <logicalFolder name="LinkerScript"
                    displayName="Linker Files"
