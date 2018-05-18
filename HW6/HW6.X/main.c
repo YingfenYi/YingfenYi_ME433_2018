@@ -30,7 +30,7 @@ int main() {
         */
         for(i=0;i<=100;i++){
         	_CP0_SET_COUNT(0);  // Reset the timer
-		    sprintf(message,"Hello World %d! ",i);
+		    sprintf(message,"Hello World %03d! ",i);
 		    LCD_drawString(28,32,message,BLUE);
             LCD_drawBar(14,48,i,YELLOW);
 
