@@ -6,9 +6,8 @@
 #define ST7735_H__
 
 
-#define BarLength 100
 //#define FOREGROUND 0xFF0F//set foreground color
-#define BACKGROUND 0x0000//set background color
+#define BACKGROUND 0x0000//set background color as BLACK
 
 
 // lookup table for all of the ascii characters
@@ -185,6 +184,7 @@ void LCD_clearScreen(unsigned short); // set the color of every pixel
 
 void LCD_drawChar(unsigned short x, unsigned short y, unsigned char ch, unsigned short color);
 void LCD_drawString(unsigned short x, unsigned short y, unsigned char ch[], unsigned short color);
-void LCD_drawBar(unsigned short x, unsigned short y, unsigned char progress, unsigned short color);
+void LCD_drawBarh(unsigned short x, unsigned short y, int progress, unsigned short color1, unsigned short color2, unsigned char length);
+void LCD_drawBarv(unsigned short x, unsigned short y, int progress, unsigned short color1, unsigned short color2, unsigned char length);
 
 #endif

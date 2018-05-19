@@ -276,17 +276,45 @@ void LCD_drawString(unsigned short x, unsigned short y, unsigned char ch[], unsi
 		i++;
 	}
 }
-
-void LCD_drawBar(unsigned short x, unsigned short y, unsigned char progress, unsigned short color){
+//vertical bar
+void LCD_drawBarv(unsigned short x, unsigned short y, int progress, \
+	unsigned short color1, unsigned short color2, unsigned char BarLength){
     int i,j;
-    for(i=0;i<progress;i++){
+    int norm;
+    if(progress>100)
+    	norm = BarLength;
+    else
+    	norm = progress*BarLength/100;  // Normalize the progress as percentage
+    
+    for(i=0;i<norm;i++){
         for(j=0;j<4;j++){
-            LCD_drawPixel(x+i,y+j,color);
+            LCD_drawPixel(x+j,y+i,color1);
         }
     }
-    for(i=progress;i<BarLength;i++){
+    for(i=norm;i<BarLength;i++){
         for(j=0;j<4;j++){
-            LCD_drawPixel(x+i,y+j,BACKGROUND);
+            LCD_drawPixel(x+j,y+i,color2);
+        }
+    }
+}
+//horizontal bar
+void LCD_drawBarh(unsigned short x, unsigned short y, int progress, \
+	unsigned short color1, unsigned short color2, unsigned char BarLength){
+    int i,j;
+    int norm;
+    if(progress>=100)
+    	norm = BarLength;
+    else
+    	norm = progress*BarLength/100;  // Normalize the progress as percentage
+
+    for(i=0;i<norm;i++){
+        for(j=0;j<4;j++){
+            LCD_drawPixel(x+i,y+j,color1);
+        }
+    }
+    for(i=norm;i<BarLength;i++){
+        for(j=0;j<4;j++){
+            LCD_drawPixel(x+i,y+j,color2);
         }
     }
 }
