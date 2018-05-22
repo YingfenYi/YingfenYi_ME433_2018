@@ -27,11 +27,11 @@ CLEAN_SUBPROJECTS=${CLEAN_SUBPROJECTS_${SUBPROJECTS}}
 PROJECTNAME=HW8.X
 
 # Active Configuration
-DEFAULTCONF=PIC32MX250F128B
+DEFAULTCONF=default
 CONF=${DEFAULTCONF}
 
 # All Configurations
-ALLCONFS=PIC32MX250F128B 
+ALLCONFS=default 
 
 
 # build
@@ -45,13 +45,13 @@ ALLCONFS=PIC32MX250F128B
 
 # clobber
 .clobber-impl: .clobber-pre .depcheck-impl
-	    ${MAKE} SUBPROJECTS=${SUBPROJECTS} CONF=PIC32MX250F128B clean
+	    ${MAKE} SUBPROJECTS=${SUBPROJECTS} CONF=default clean
 
 
 
 # all
 .all-impl: .all-pre .depcheck-impl
-	    ${MAKE} SUBPROJECTS=${SUBPROJECTS} CONF=PIC32MX250F128B build
+	    ${MAKE} SUBPROJECTS=${SUBPROJECTS} CONF=default build
 
 
 
