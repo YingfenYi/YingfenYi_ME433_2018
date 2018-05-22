@@ -17,7 +17,7 @@
 void initIMU();
 void I2C_read_multiple(unsigned char address, unsigned char reg, char * data, int length);
 void Transform(char * data, short * dtrans, int length);
-void LCD_drawBardata(short hor, short ver);
+void LCD_drawBardata(float hor, float ver);
 
 int main() {
 	// some initialization function to set the right speed setting
@@ -40,45 +40,62 @@ int main() {
     LCD_drawBarh(5,78,0,YELLOW,BLUE,118);//horizontal bar background 
 
     //unsigned short tmp[]={0xFFFF,0x1111};
-    signed short Ax, Az;
+    float Ax, Az, Ax1, Az1;
+
     
 	while(1) {
     	_CP0_SET_COUNT(0);  // Reset the timer
         LATAINV = 0x10;     // turn off/on LED
 
 		I2C_read_multiple(SLAVE_ADDR, OUT_TEMP_L, data, length);
-		Transform(data, dtrans, length/2);
+/*		Transform(data, dtrans, length/2);
 
 		sprintf(message,"Gx:%hd",dtrans[1]);
 		LCD_drawString(5,10,message,RED);
 		sprintf(message,"Gy:%hd",dtrans[3]);
 		LCD_drawString(5,10 + HEIGHT,message,RED);
-
-/*
-		signed short Ax = dtrans[4];
-		signed short Ay = dtrans[5];
-		sprintf(message,"Ax:%d",Ax);
-		LCD_drawString(5,10 + 2*HEIGHT,message,RED);
-		sprintf(message,"Ay:%d",Ay);
-		LCD_drawString(5,10 + 3*HEIGHT,message,RED);
-		LCD_drawBardata(Ax,Ay);
-		*/
-		//if(dtrans[4]*Ax>=0 | abs(Ax)<500)
-			Ax = dtrans[4];
+*/
+		Ax1 = 100*(data[9]<<8 | data[8])*(2.0/32757.0);
+		Az1 = 100*(data[13]<<8 | data[12])*(2.0/32757.0);
 		// prevent fluctuation, otherwise not change Ax
-		//if(dtrans[6]*Az>=0 | abs(Az)<500)
-			Az = dtrans[6];
+		if(Ax1*Ax>=0 | abs(Ax)<=20)
+			Ax = Ax1;
+		else
+			Ax = Ax-0.5;
+		if(Az1*Az>=0 | abs(Az)<=20)
+			Az = Az1;
+		else
+			Az = Az-0.5;
 
-		sprintf(message,"Ax:%d",Ax);
+		// if(abs(Ax1-Ax)<=20)
+		// 	Ax = Ax1;
+		// else
+		// 	Ax = Ax-0.5;
+		// if(abs(Az1-Az)<=20)
+		// 	Az = Az1;
+		// else
+		// 	Az = Az-0.5;
+
+		sprintf(message,"Ax:%1.3f",Ax);
 		LCD_drawString(5,10 + 2*HEIGHT,message,RED);
-		sprintf(message,"Ay:%d",Az);
+		sprintf(message,"Ay:%1.3f",Az);
 		LCD_drawString(5,10 + 3*HEIGHT,message,RED);
+
+		// Axm = 500*i;
+		// Azm = 500*j;
+		// sprintf(message,"xm:%hd",Axm);
+		// LCD_drawString(5,10 + 4*HEIGHT,message,RED);
+		// sprintf(message,"ym:%hd",Azm);
+		// LCD_drawString(5,10 + 5*HEIGHT,message,RED);
+
 		LCD_drawBardata(Ax,Az);
+		// i++;j++;
 
 		//sprintf(message,"Az:%d",p);
 		//LCD_drawString(5,10 + 4*HEIGHT,message,RED);
 		
-        while(_CP0_GET_COUNT() < 4800000){;}  // 24MHz/5Hz = 4800000
+        while(_CP0_GET_COUNT() < 1200000){;}  // 24MHz/20Hz = 1200000
+        // while(_CP0_GET_COUNT() < 4800000){;}  // 24MHz/5Hz = 4800000
 	}
 	return 0;
 }
@@ -122,6 +139,8 @@ void I2C_read_multiple(unsigned char address, unsigned char reg, char * data, in
 	i2c_master_ack(1); // make the ack so the slave knows we got it
 	i2c_master_stop(); // make the stop bit
 }
+
+/*
 //8-bit char to 16-bit short
 void Transform(char * data, short * dtrans, int length){
 	int i;
@@ -131,10 +150,11 @@ void Transform(char * data, short * dtrans, int length){
 		dtrans[i] = data[2*i+1]<<8 | data[2*i];
 	}
 }
+*/
 
-void LCD_drawBardata(short hor, short ver){
-	float p1 = (float)hor/150;
-	float p2 = (float)ver/150;
+void LCD_drawBardata(float hor, float ver){
+	float p1 = hor;
+	float p2 = ver;
 	if(hor>=0){
     	LCD_drawBarh(64,78,(int)p1,YELLOW,BLUE,59);//horizontal bar background 
     	LCD_drawBarh(5,78,0,YELLOW,BLUE,59);//clear another bar
