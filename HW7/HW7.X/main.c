@@ -58,11 +58,11 @@ int main() {
 		Ax1 = 100*(data[9]<<8 | data[8])*(2.0/32757.0);
 		Az1 = 100*(data[13]<<8 | data[12])*(2.0/32757.0);
 		// prevent fluctuation, otherwise not change Ax
-		if(Ax1*Ax>=0 | abs(Ax)<=20)
+		if(Ax1*Ax>=0 || abs(Ax)<=20)
 			Ax = Ax1;
 		else
 			Ax = Ax-0.5;
-		if(Az1*Az>=0 | abs(Az)<=20)
+		if(Az1*Az>=0 || abs(Az)<=20)
 			Az = Az1;
 		else
 			Az = Az-0.5;
