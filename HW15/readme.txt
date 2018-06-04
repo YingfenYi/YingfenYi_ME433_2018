@@ -1,0 +1,1 @@
+As we will use the Airplane Bullet Spinners Propeller Adapter Saver, the hole in the wheel should be designed for the shaft of adaptor rather than the D-shaft of the motor.
