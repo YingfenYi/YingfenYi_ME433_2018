@@ -9,9 +9,9 @@
 
   Description:
     This file contains source code necessary to initialize the system.  It
-    implements the "SYS_Initialize" function, defines the configuration bits, 
-    and allocates any necessary global system resources, such as the 
-    sysObj structure that contains the object handles to all the MPLAB Harmony 
+    implements the "SYS_Initialize" function, defines the configuration bits,
+    and allocates any necessary global system resources, such as the
+    sysObj structure that contains the object handles to all the MPLAB Harmony
     module objects in the system.
  *******************************************************************************/
 
@@ -68,7 +68,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 
 /*** DEVCFG1 ***/
 
-#pragma config FNOSC =      PRIPLL
+#pragma config FNOSC =      FRCPLL
 #pragma config FSOSCEN =    OFF
 #pragma config IESO =       OFF
 #pragma config POSCMOD =    HS
@@ -108,7 +108,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
  * Endpoint Table needed by the Device Layer.
  ****************************************************/
 uint8_t __attribute__((aligned(512))) endPointTable[DRV_USBFS_ENDPOINTS_NUMBER * 32];
-const DRV_USBFS_INIT drvUSBInit =
+const DRV_USBFS_INIT drvUSBFSInit =
 {
     /* Assign the endpoint table */
     .endpointTable= endPointTable,
@@ -119,6 +119,7 @@ const DRV_USBFS_INIT drvUSBInit =
     /* System module initialization */
     .moduleInit = {SYS_MODULE_POWER_RUN_FULL},
     
+    /* Operation Mode */
     .operationMode = DRV_USBFS_OPMODE_DEVICE,
     
     .operationSpeed = USB_SPEED_FULL,
@@ -130,7 +131,8 @@ const DRV_USBFS_INIT drvUSBInit =
     .suspendInSleep = false,
 
     /* Identifies peripheral (PLIB-level) ID */
-    .usbID = USB_ID_1
+    .usbID = USB_ID_1,
+    
 };
 // </editor-fold>
 
@@ -148,17 +150,6 @@ SYSTEM_OBJECTS sysObj;
 // Section: Module Initialization Data
 // *****************************************************************************
 // *****************************************************************************
-//<editor-fold defaultstate="collapsed" desc="SYS_DEVCON Initialization Data">
-/*******************************************************************************
-  Device Control System Service Initialization Data
-*/
-
-const SYS_DEVCON_INIT sysDevconInit =
-{
-    .moduleInit = {0},
-};
-
-// </editor-fold>
 
 // *****************************************************************************
 // *****************************************************************************
@@ -241,7 +232,7 @@ const uint8_t fullSpeedConfigurationDescriptor[]=
 
     0x09,                                           // Size of this descriptor in bytes
     USB_DESCRIPTOR_INTERFACE,                       // Descriptor Type
-    0,                                           // Interface Number
+    0,                                  // Interface Number
     0x00,                                           // Alternate Setting Number
     0x01,                                           // Number of endpoints in this interface
     USB_CDC_COMMUNICATIONS_INTERFACE_CLASS_CODE,    // Class code
@@ -273,11 +264,11 @@ const uint8_t fullSpeedConfigurationDescriptor[]=
     0x00,                                                       // bmCapabilities of CallManagement
     1,                                                       // Data interface number
 
-    /* Interrupt Endpoint (IN)Descriptor */
+    /* Interrupt Endpoint (IN) Descriptor */
 
     0x07,                           // Size of this descriptor
     USB_DESCRIPTOR_ENDPOINT,        // Endpoint Descriptor
-    1| USB_EP_DIRECTION_IN,      // EndpointAddress ( EP1 IN INTERRUPT)
+    1 | USB_EP_DIRECTION_IN,    // EndpointAddress ( EP1 IN INTERRUPT)
     USB_TRANSFER_TYPE_INTERRUPT,    // Attributes type of EP (INTERRUPT)
     0x10,0x00,                      // Max packet size of this EP
     0x02,                           // Interval (in ms)
@@ -294,12 +285,12 @@ const uint8_t fullSpeedConfigurationDescriptor[]=
     USB_CDC_PROTOCOL_NO_CLASS_SPECIFIC, // Protocol code
     0x00,                               // Interface string index
 
-    /* Bulk Endpoint (OUT)Descriptor */
+    /* Bulk Endpoint (OUT) Descriptor */
 
     0x07,                       // Size of this descriptor
     USB_DESCRIPTOR_ENDPOINT,    // Endpoint Descriptor
-    2|USB_EP_DIRECTION_OUT,     // EndpointAddress ( EP2 OUT)
-    USB_TRANSFER_TYPE_BULK,     // Attributes type of EP (BULK)
+    2 | USB_EP_DIRECTION_OUT,   // EndpointAddress ( EP2 OUT )
+	USB_TRANSFER_TYPE_BULK,     // Attributes type of EP (BULK)
     0x40,0x00,                  // Max packet size of this EP
     0x00,                       // Interval (in ms)
 
@@ -307,7 +298,7 @@ const uint8_t fullSpeedConfigurationDescriptor[]=
 
     0x07,                       // Size of this descriptor
     USB_DESCRIPTOR_ENDPOINT,    // Endpoint Descriptor
-    2|USB_EP_DIRECTION_IN,      // EndpointAddress ( EP2 IN )
+    2 | USB_EP_DIRECTION_IN,    // EndpointAddress ( EP2 IN )
     0x02,                       // Attributes type of EP (BULK)
     0x40,0x00,                  // Max packet size of this EP
     0x00,                       // Interval (in ms)
@@ -436,18 +427,9 @@ const USB_DEVICE_INIT usbDevInitData =
 
 // *****************************************************************************
 // *****************************************************************************
-// Section: Static Initialization Functions
-// *****************************************************************************
-// *****************************************************************************
-
-
-
-// *****************************************************************************
-// *****************************************************************************
 // Section: System Initialization
 // *****************************************************************************
 // *****************************************************************************
-
 
 /*******************************************************************************
   Function:
@@ -464,27 +446,26 @@ void SYS_Initialize ( void* data )
 {
     /* Core Processor Initialization */
     SYS_CLK_Initialize( NULL );
-    sysObj.sysDevcon = SYS_DEVCON_Initialize(SYS_DEVCON_INDEX_0, (SYS_MODULE_INIT*)&sysDevconInit);
+    SYS_DEVCON_Initialize(SYS_DEVCON_INDEX_0, (SYS_MODULE_INIT*)NULL);
     SYS_DEVCON_PerformanceConfig(SYS_CLK_SystemFrequencyGet());
     SYS_PORTS_Initialize();
 
     /* Initialize Drivers */
     /* Initialize USB Driver */ 
-    sysObj.drvUSBObject = DRV_USBFS_Initialize(DRV_USBFS_INDEX_0, (SYS_MODULE_INIT *) &drvUSBInit);
-
-    /* Initialize System Services */
-
-    /*** Interrupt Service Initialization Code ***/
-    SYS_INT_Initialize();
-  
-    /* Initialize Middleware */
+    sysObj.drvUSBObject = DRV_USBFS_Initialize(DRV_USBFS_INDEX_0, (SYS_MODULE_INIT *) &drvUSBFSInit);
+    
     /* Set priority of USB interrupt source */
     SYS_INT_VectorPrioritySet(INT_VECTOR_USB1, INT_PRIORITY_LEVEL4);
 
     /* Set Sub-priority of USB interrupt source */
     SYS_INT_VectorSubprioritySet(INT_VECTOR_USB1, INT_SUBPRIORITY_LEVEL0);
 
+    /* Initialize System Services */
 
+    /*** Interrupt Service Initialization Code ***/
+    SYS_INT_Initialize();
+
+    /* Initialize Middleware */
     /* Initialize the USB device layer */
     sysObj.usbDevObject0 = USB_DEVICE_Initialize (USB_DEVICE_INDEX_0 , ( SYS_MODULE_INIT* ) & usbDevInitData);
 

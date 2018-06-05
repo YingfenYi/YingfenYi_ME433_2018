@@ -36,33 +36,26 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 (INCLUDING BUT NOT LIMITED TO ANY DEFENSE THEREOF), OR OTHER SIMILAR COSTS.
  *******************************************************************************/
 //DOM-IGNORE-END
-
 #ifndef _SYS_DEFINITIONS_H
 #define _SYS_DEFINITIONS_H
-
 
 // *****************************************************************************
 // *****************************************************************************
 // Section: Included Files
 // *****************************************************************************
 // *****************************************************************************
-
 #include <stdint.h>
 #include <stddef.h>
 #include <stdbool.h>
 #include "system/common/sys_common.h"
 #include "system/common/sys_module.h"
-#include "system/clk/sys_clk.h"
-#include "system/clk/sys_clk_static.h"
 #include "system/devcon/sys_devcon.h"
+#include "system/clk/sys_clk.h"
 #include "system/int/sys_int.h"
 #include "system/ports/sys_ports.h"
 #include "driver/usb/usbfs/drv_usbfs.h"
 #include "usb/usb_device.h"
-
-
 #include "usb/usb_device_cdc.h"
-
 #include "app.h"
 
 
@@ -72,7 +65,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 extern "C" {
 
 #endif
-// DOM-IGNORE-END 
+// DOM-IGNORE-END
 
 // *****************************************************************************
 // *****************************************************************************
@@ -97,7 +90,7 @@ extern "C" {
 
 typedef struct
 {
-    SYS_MODULE_OBJ  sysDevcon;
+
     SYS_MODULE_OBJ  drvUSBObject;
     
     SYS_MODULE_OBJ  usbDevObject0;
@@ -106,7 +99,6 @@ typedef struct
 
 } SYSTEM_OBJECTS;
 
-
 // *****************************************************************************
 // *****************************************************************************
 // Section: extern declarations
@@ -114,7 +106,6 @@ typedef struct
 // *****************************************************************************
 
 extern SYSTEM_OBJECTS sysObj;
-
 
 
 //DOM-IGNORE-BEGIN

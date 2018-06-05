@@ -1,12 +1,16 @@
-#include <xc.h>
-#include "I2C.h"
+#include<xc.h>
+#include "i2c_master_noint.h"
+
 // I2C Master utilities, 100 kHz, using polling rather than interrupts
 // The functions must be callled in the correct order as per the I2C protocol
-// I2C pins use 10k pull-up resistors
+// Change I2C2 to the I2C channel you are using
+// I2C pins need pull-up resistors, 2k-10k
 
 void i2c_master_setup(void) {
-  I2C2BRG = 233;                    // I2CBRG = [1/(2*Fsck) - PGD]*Pblck - 2 
-                                    // for PIC32MX250F128B, Pblck = 48MHz
+  I2C2BRG = 0x037;            // I2CBRG = [1/(2*Fsck) - PGD]*Pbclk - 2
+  // we want 400 kHz, 1/(2*Fsck)=1250ns, TPGD=104ns, Pbclk=48MHz, I2CBRG=53.008->53
+  // From datasheet, 50MHz->0x037/55
+                                    // look up PGD for your PIC32
   I2C2CONbits.ON = 1;               // turn on the I2C2 module
 }
 
@@ -16,8 +20,8 @@ void i2c_master_start(void) {
     while(I2C2CONbits.SEN) { ; }    // wait for the start bit to be sent
 }
 
-void i2c_master_restart(void) {     
-    I2C2CONbits.RSEN = 1;           // send a restart 
+void i2c_master_restart(void) {
+    I2C2CONbits.RSEN = 1;           // send a restart
     while(I2C2CONbits.RSEN) { ; }   // wait for the restart to clear
 }
 
@@ -25,7 +29,7 @@ void i2c_master_send(unsigned char byte) { // send a byte to slave
   I2C2TRN = byte;                   // if an address, bit 0 = 0 for write, 1 for read
   while(I2C2STATbits.TRSTAT) { ; }  // wait for the transmission to finish
   if(I2C2STATbits.ACKSTAT) {        // if this is high, slave has not acknowledged
-   ; // ("I2C2 Master: failed to receive ACK\r\n");
+    // ("I2C2 Master: failed to receive ACK\r\n");
   }
 }
 
