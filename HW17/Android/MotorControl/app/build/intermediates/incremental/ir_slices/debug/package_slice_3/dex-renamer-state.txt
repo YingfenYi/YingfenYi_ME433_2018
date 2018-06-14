@@ -1,0 +1,4 @@
+#Wed Jun 13 18:26:12 CDT 2018
+base.0=D\:\\Documents\\GitHub\\YingfenYi_ME433_2018\\HW17\\Android\\MotorControl\\app\\build\\intermediates\\transforms\\dexMerger\\debug\\4
+path.0=classes.dex
+renamed.0=classes.dex
