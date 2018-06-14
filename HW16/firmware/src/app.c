@@ -487,16 +487,16 @@ void APP_Tasks(void) {
                 int error;
                 error = rxVal - 320; // 240 means the dot is in the middle of the screen
                     if (error>0) { // slow down the left motor to steer to the left
-                    OC4RS = 500+2*error; // velocity, 50%
-                    OC1RS = 500-2*error; // turn left
+                    OC4RS = 250+0.5*error; // velocity, 50%
+                    OC1RS = 250-0.5*error; // turn left
                     }
                     else if (error<0) { // slow down the right motor to steer to the right
-                    OC4RS = 500+2*error; // velocity, 50%
-                    OC1RS = 500-2*error; // turn left
+                    OC4RS = 250+0.5*error; // velocity, 50%
+                    OC1RS = 250-0.5*error; // turn left
                     }
                     else{
-                     OC1RS = 500;
-                     OC4RS = 500;
+                     OC4RS = 250;
+                     OC1RS = 250;
                     }
                 
             }                                       
