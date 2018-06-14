@@ -1,0 +1,11 @@
+#Internal package file, do not edit.
+#Wed Jun 13 18:26:16 CDT 2018
+1.base=D\:\\Documents\\GitHub\\YingfenYi_ME433_2018\\HW17\\Android\\MotorControl\\app\\build\\intermediates\\transforms\\dexMerger\\debug\\13
+0.baseType=DIRECTORY
+1.baseType=DIRECTORY
+count=2
+1.set=DEX
+0.path=classes.dex
+0.set=DEX
+0.base=D\:\\Documents\\GitHub\\YingfenYi_ME433_2018\\HW17\\Android\\MotorControl\\app\\build\\intermediates\\transforms\\dexMerger\\debug\\12
+1.path=classes.dex
